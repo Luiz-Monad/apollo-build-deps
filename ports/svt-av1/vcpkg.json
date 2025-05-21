@@ -1,0 +1,14 @@
+{
+  "name": "svt-av1",
+  "version": "1.6.0",
+  "port-version": 100,
+  "description": "Scalable Video Technology for AV1 (encoder)",
+  "homepage": "https://github.com/LizardByte-infrastructure/SVT-AV1",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
