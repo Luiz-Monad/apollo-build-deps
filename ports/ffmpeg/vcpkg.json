@@ -1,0 +1,104 @@
+{
+  "name": "ffmpeg",
+  "version": "7.1.1",
+  "port-version": 200,
+  "description": [
+    "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
+    "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations."
+  ],
+  "homepage": "https://github.com/FFmpeg/FFmpeg",
+  "license": "LGPL-3.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Build with all allowed dependencies selected",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "AMF"
+          ],
+          "supports": "!osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "nv-codec-headers"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "SVT-AV1"
+          ]
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "x264"
+          ],
+          "platform": "!(arm & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "x265"
+          ],
+          "platform": "!uwp & !(arm & windows)"
+        }
+      ]
+    },
+    "AMF": {
+      "description": "AMD AMF codec support",
+      "dependencies": [
+        "AMF"
+      ],
+      "supports": "!osx"
+    },
+    "nv-codec-headers": {
+      "description": "Nvidia video decoding/encoding acceleration",
+      "dependencies": [
+        "nv-codec-headers"
+      ],
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))"
+    },
+    "SVT-AV1": {
+      "description": "AV1 encoding via Scalable Video Technology",
+      "dependencies": [
+        "SVT-AV1"
+      ]
+    },
+    "x264": {
+      "description": "H.264 encoding via x264",
+      "dependencies": [
+        "x264"
+      ],
+      "platform": "!(arm & windows)"
+    },
+    "x265": {
+      "description": "HEVC encoding via x265",
+      "dependencies": [
+        "x265"
+      ],
+      "platform": "!uwp & !(arm & windows)"
+    }
+  }
+}
