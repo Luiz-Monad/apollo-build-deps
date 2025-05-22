@@ -1,10 +1,26 @@
+# The latest ref in branch sdk/12.0
+set(ref 451da99614412a7f9526ef301a5ee0c7a6f9ad76)
+
+# Conditionally find and apply patches in numerical order
+if(NOT "no-patches" IN_LIST FEATURES)
+    file(GLOB PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
+    )
+    list(SORT PATCHES)
+endif()
+file(GLOB VCPKG_PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
+)
+list(SORT VCPKG_PATCHES)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
-    SHA1 451da99614412a7f9526ef301a5ee0c7a6f9ad76
+    SHA1 "${ref}"
     HEAD_REF sdk/12.0
     PATCHES
-        patches/01-nvenc-av1-filler.patch
+        ${VCPKG_PATCHES}
+        ${PATCHES}
 )
 
 # ====================================================

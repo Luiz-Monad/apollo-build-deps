@@ -1,8 +1,26 @@
+# The latest ref in branch master
+set(ref 08c18ba0768ed3dbbff0903adc326fb3a7549bd9)
+
+# Conditionally find and apply patches in numerical order
+if(NOT "no-patches" IN_LIST FEATURES)
+    file(GLOB PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
+    )
+    list(SORT PATCHES)
+endif()
+file(GLOB VCPKG_PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
+)
+list(SORT VCPKG_PATCHES)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LizardByte-infrastructure/SVT-AV1
-    SHA1 08c18ba0768ed3dbbff0903adc326fb3a7549bd9
+    SHA1 "${ref}"
     HEAD_REF master
+    PATCHES
+        ${VCPKG_PATCHES}
+        ${PATCHES}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

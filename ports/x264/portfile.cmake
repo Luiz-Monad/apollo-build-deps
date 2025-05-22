@@ -1,6 +1,18 @@
 # The latest ref in branch stable
 set(ref 31e19f92f00c7003fa115047ce50978bc98c3a0d)
 
+# Conditionally find and apply patches in numerical order
+if(NOT "no-patches" IN_LIST FEATURES)
+    file(GLOB PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
+    )
+    list(SORT PATCHES)
+endif()
+file(GLOB VCPKG_PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
+)
+list(SORT VCPKG_PATCHES)
+
 # Note on x264 versioning:
 # The pc file exports "0.164.<N>" where is the number of commits.
 # The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.
@@ -18,10 +30,8 @@ vcpkg_from_github(
     HEAD_REF stable
     PATCHES
         "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff"
-        patches/vcpkg-uwp-cflags.patch
-        patches/vcpkg-parallel-install.patch
-        patches/vcpkg-allow-clang-cl.patch
-        patches/vcpkg-configure.patch
+        ${VCPKG_PATCHES}
+        ${PATCHES}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

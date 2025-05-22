@@ -1,16 +1,26 @@
+# The latest ref in branch Release_3.5
+set(ref 3bd3dd731b4b4c3fbbe5e513c16bc6ae481a0ec5)
+
+# Conditionally find and apply patches in numerical order
+if(NOT "no-patches" IN_LIST FEATURES)
+    file(GLOB PATCHES
+        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
+    )
+    list(SORT PATCHES)
+endif()
+file(GLOB VCPKG_PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
+)
+list(SORT VCPKG_PATCHES)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LizardByte-infrastructure/x265_git
-    SHA1 3bd3dd731b4b4c3fbbe5e513c16bc6ae481a0ec5
+    SHA1 "${ref}"
     HEAD_REF Release_3.5
     PATCHES
-        patches/vcpkg-disable-install-pdb.patch
-        patches/vcpkg-version.patch
-        patches/vcpkg-linkage.diff
-        patches/vcpkg-pkgconfig.diff
-        patches/vcpkg-pthread.diff
-        patches/vcpkg-compiler-target.diff
-        patches/vcpkg-neon.diff
+        ${VCPKG_PATCHES}
+        ${PATCHES}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
