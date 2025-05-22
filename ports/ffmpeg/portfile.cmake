@@ -1,21 +1,42 @@
+# The latest ref in branch release/7.1
+set(ref 276bd388f33b5071799691aee6e0cd99c7133d61)
+
+# Conditionally find and apply patches in numerical order
+if(NOT "no-patches" IN_LIST FEATURES)
+    if(NOT "no-cbs-patches" IN_LIST FEATURES)
+        file(GLOB CBS_PATCHES
+            "${CMAKE_CURRENT_LIST_DIR}/patches/cbs/*.patch"
+        )
+        list(SORT CBS_PATCHES)
+    endif()
+    if(NOT "no-mf-patches" IN_LIST FEATURES)
+        file(GLOB MF_PATCHES
+            "${CMAKE_CURRENT_LIST_DIR}/patches/MF/*.patch"
+        )
+        list(SORT MF_PATCHES)
+    endif()
+    if(NOT "no-vaapi-patches" IN_LIST FEATURES)
+        file(GLOB VAAPI_PATCHES
+            "${CMAKE_CURRENT_LIST_DIR}/patches/VAAPI/*.patch"
+        )
+        list(SORT VAAPI_PATCHES)
+    endif()
+endif()
+file(GLOB VCPKG_PATCHES
+    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
+)
+list(SORT VCPKG_PATCHES)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    SHA1 276bd388f33b5071799691aee6e0cd99c7133d61
+    SHA1 "${ref}"
     HEAD_REF release/7.1
     PATCHES
-        patches/vcpkg/0001-create-lib-libraries.patch
-        patches/vcpkg/0002-fix-msvc-link.patch
-        patches/vcpkg/0003-fix-windowsinclude.patch
-        patches/vcpkg/0004-dependencies.patch
-        patches/vcpkg/0005-fix-nasm.patch
-        patches/vcpkg/0007-fix-lib-naming.patch
-        patches/vcpkg/0013-define-WINVER.patch
-        patches/vcpkg/0020-fix-aarch64-libswscale.patch
-        patches/vcpkg/0024-fix-osx-host-c11.patch
-        patches/vcpkg/0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-        patches/vcpkg/0041-add-const-for-opengl-definition.patch
-        patches/vcpkg/0043-fix-miss-head.patch
+        ${VCPKG_PATCHES}
+        ${CBS_PATCHES}
+        ${MF_PATCHES}
+        ${VAAPI_PATCHES}
 )
 
 # ========================================================================================================

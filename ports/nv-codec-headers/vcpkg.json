@@ -1,9 +1,14 @@
 {
-  "name": "ffnvcodec",
+  "name": "nv-codec-headers",
   "version": "12.0.16.1",
   "port-version": 200,
   "description": "FFmpeg nvidia headers",
   "homepage": "https://github.com/FFmpeg/nv-codec-headers",
-  "license": "Copyright (c) 2010-2024 NVIDIA Corporation",
-  "supports": "linux | (!osx & !uwp & !(arm64 & windows))"
+  "license": null,
+  "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
+  "features": {
+    "no-patches": {
+      "description": "Disable all patches (except vcpkg)"
+    }
+  }
 }

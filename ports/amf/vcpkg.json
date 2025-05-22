@@ -1,9 +1,14 @@
 {
-  "name": "amd-amf",
+  "name": "amf",
   "version": "1.4.35",
   "port-version": 100,
   "description": "AMD Advanced Media Framework headers",
   "homepage": "https://github.com/GPUOpen-LibrariesAndSDKs/AMF",
   "license": "MIT",
-  "supports": "!osx"
+  "supports": "!osx",
+  "features": {
+    "no-patches": {
+      "description": "Disable all patches (except vcpkg)"
+    }
+  }
 }

@@ -11,5 +11,10 @@
       "name": "vcpkg-make",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "no-patches": {
+      "description": "Disable all patches (except vcpkg)"
+    }
+  }
 }
