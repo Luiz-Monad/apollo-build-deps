@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "amf",
+    "nv-codec-headers",
+    "svt-av1",
+    "x264",
+    "x265"
+  ]
+}

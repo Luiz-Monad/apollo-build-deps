@@ -1,0 +1,27 @@
+{
+    "default-registry": {
+        "kind": "git",
+        "baseline": "ce613c41372b23b1f51333815feb3edd87ef8a8b",
+        "repository": "https://github.com/microsoft/vcpkg"
+    },
+    "registries": [
+        {
+            "kind": "artifact",
+            "location": "https://github.com/microsoft/vcpkg-ce-catalog/archive/refs/heads/main.zip",
+            "name": "microsoft"
+        },
+        {
+            "kind": "git",
+            "repository": "https://github.com/luiz-monad/apollo-build-deps",
+            "baseline": "d87002c1df550a5315571bc5ab9adee6f8d2731c",
+            "packages": [
+                "amf",
+                "ffmpeg",
+                "nv-codec-headers",
+                "svt-av1",
+                "x264",
+                "x265"
+            ]
+        }
+    ]
+}

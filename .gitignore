@@ -1,9 +1,8 @@
 # Distribution / packaging
-.build/
 build/
 cmake-*/
+.build/
 vcpkg_installed/
 
 # JetBrains project folder
 .idea/
-

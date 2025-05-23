@@ -29,24 +29,16 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "svt-av1"
+          ]
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "amf"
           ],
           "platform": "!osx"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "nv-codec-headers"
-          ],
-          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "svt-av1"
-          ]
         },
         {
           "name": "ffmpeg",
@@ -63,22 +55,42 @@
             "x265"
           ],
           "platform": "!uwp & !(arm & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "nv-codec-headers"
+          ],
+          "platform": "linux | (!osx & !uwp & !(arm64 & windows))"
         }
       ]
     },
     "amf": {
       "description": "AMD AMF codec support",
+      "supports": "!osx",
       "dependencies": [
         "amf"
-      ],
-      "supports": "!osx"
+      ]
+    },
+    "no-cbs-patches": {
+      "description": "Disable all CBS patches (except vcpkg)"
+    },
+    "no-mf-patches": {
+      "description": "Disable all MF patches (except vcpkg)"
+    },
+    "no-patches": {
+      "description": "Disable all patches (except vcpkg)"
+    },
+    "no-vaapi-patches": {
+      "description": "Disable all VAAPI patches (except vcpkg)"
     },
     "nv-codec-headers": {
       "description": "Nvidia video decoding/encoding acceleration",
+      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "nv-codec-headers"
-      ],
-      "supports": "linux | (!osx & !uwp & !(arm64 & windows))"
+      ]
     },
     "svt-av1": {
       "description": "AV1 encoding via Scalable Video Technology",
@@ -88,29 +100,17 @@
     },
     "x264": {
       "description": "H.264 encoding via x264",
+      "supports": "!(arm & windows)",
       "dependencies": [
         "x264"
-      ],
-      "supports": "!(arm & windows)"
+      ]
     },
     "x265": {
       "description": "HEVC encoding via x265",
+      "supports": "!uwp & !(arm & windows)",
       "dependencies": [
         "x265"
-      ],
-      "supports": "!uwp & !(arm & windows)"
-    },
-    "no-patches": {
-      "description": "Disable all patches (except vcpkg)"
-    },
-    "no-cbs-patches": {
-      "description": "Disable all CBS patches (except vcpkg)"
-    },
-    "no-mf-patches": {
-      "description": "Disable all MF patches (except vcpkg)"
-    },
-    "no-vaapi-patches": {
-      "description": "Disable all VAAPI patches (except vcpkg)"
+      ]
     }
   }
 }
