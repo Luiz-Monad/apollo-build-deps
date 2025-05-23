@@ -1,5 +1,7 @@
-# The latest ref in branch master
+# The latest ref in branch
 set(ref 08c18ba0768ed3dbbff0903adc326fb3a7549bd9)
+set(branch v1.6.0)
+set(sha512 0f790fe896d1e1db79cbb0162f786e2e074dddb6d3f8231a85e1e30e6f43976d2ae968878a6bb93603f0a6186ddc1f6fb525705b73ed0e52c7ba0b39de747a7a)
 
 # Conditionally find and apply patches in numerical order
 if(NOT "no-patches" IN_LIST FEATURES)
@@ -16,8 +18,8 @@ list(SORT VCPKG_PATCHES)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LizardByte-infrastructure/SVT-AV1
-    SHA1 "${ref}"
-    HEAD_REF master
+    REF "${ref}"
+    SHA512 "${sha512}"
     PATCHES
         ${VCPKG_PATCHES}
         ${PATCHES}

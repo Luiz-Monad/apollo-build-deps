@@ -1,5 +1,7 @@
-# The latest ref in branch sdk/12.0
-set(ref 451da99614412a7f9526ef301a5ee0c7a6f9ad76)
+# The latest ref in branch
+set(ref 22441b505d9d9afc1e3002290820909846c24bdc)
+set(branch sdk/12.0)
+set(sha512 3fa66cc36a982db24b3f57925dd4cef99ead58f5e01ad2764638d16749b35c41f1ae5ad0cf7c73e4e62ad5391065ba2345e309ebf339b274532560d2c4820153)
 
 # Conditionally find and apply patches in numerical order
 if(NOT "no-patches" IN_LIST FEATURES)
@@ -16,8 +18,8 @@ list(SORT VCPKG_PATCHES)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
-    SHA1 "${ref}"
-    HEAD_REF sdk/12.0
+    REF "${ref}"
+    SHA512 "${sha512}"
     PATCHES
         ${VCPKG_PATCHES}
         ${PATCHES}
@@ -56,14 +58,14 @@ else()
     IF (NOT MAKE)
         MESSAGE(FATAL_ERROR "MAKE not found")
     ENDIF ()
-    
+
     vcpkg_execute_required_process(
         COMMAND make PREFIX=$${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME make-${TARGET_TRIPLET}
     )
 
-    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
+    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     if(NOT VCPKG_BUILD_TYPE)

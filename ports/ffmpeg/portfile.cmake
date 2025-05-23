@@ -1,5 +1,7 @@
-# The latest ref in branch release/7.1
+# The latest ref in branch
 set(ref 276bd388f33b5071799691aee6e0cd99c7133d61)
+set(branch release/7.1)
+set(sha512 8da192b4089981fb152c486dfc2ae813f31bcb3fbdb80af8dea34c489573452477d40e6fbd8f4e896a99ea04e8890c08f391d7551a2ad4ba794b2f10ac6e5b20)
 
 # Conditionally find and apply patches in numerical order
 if(NOT "no-patches" IN_LIST FEATURES)
@@ -30,8 +32,8 @@ list(SORT VCPKG_PATCHES)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    SHA1 "${ref}"
-    HEAD_REF release/7.1
+    REF "${ref}"
+    SHA512 "${sha512}"
     PATCHES
         ${VCPKG_PATCHES}
         ${CBS_PATCHES}
@@ -40,7 +42,7 @@ vcpkg_from_github(
 )
 
 # ========================================================================================================
-#                                                 PLATFORM                                                
+#                                                 PLATFORM
 # ========================================================================================================
 
 if(SOURCE_PATH MATCHES " ")
@@ -198,7 +200,7 @@ vcpkg_add_to_path(PREPEND ${prog_env})
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 # ========================================================================================================
-#                                                  MODULES                                                
+#                                                  MODULES
 # ========================================================================================================
 
 set(OPTIONS "${OPTIONS} --disable-all")
@@ -282,7 +284,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 
 # ========================================================================================================
-#                                                 COMPILER                                                
+#                                                 COMPILER
 # ========================================================================================================
 
 set(OPTIONS_CROSS "--enable-cross-compile")
@@ -400,7 +402,7 @@ set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 message(STATUS "Building Options: ${OPTIONS}")
 
 # ========================================================================================================
-#                                                   BUILD                                                 
+#                                                   BUILD
 # ========================================================================================================
 
 # Release build
@@ -531,7 +533,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 # ========================================================================================================
-#                                                  PACKAGE                                                
+#                                                  PACKAGE
 # ========================================================================================================
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
