@@ -22,3 +22,7 @@
 	path = third-party/FFmpeg/SVT-AV1
 	url = https://github.com/LizardByte-infrastructure/SVT-AV1.git
 	branch = master
+[submodule "third-party/FFmpeg/vpl"]
+	path = third-party/FFmpeg/vpl
+	url = https://github.com/intel/libvpl.git
+	branch = main
