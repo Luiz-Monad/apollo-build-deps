@@ -10,5 +10,11 @@
     "no-patches": {
       "description": "Disable all patches (except vcpkg)"
     }
-  }
+  },
+  "dependencies": [
+    {
+      "name": "vcpkg-tools",
+      "host": true
+    }
+  ]
 }

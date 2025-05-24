@@ -16,6 +16,10 @@
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
+    },
+    {
+      "name": "vcpkg-tools",
+      "host": true
     }
   ],
   "default-features": [

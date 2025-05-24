@@ -3,18 +3,6 @@ set(ref 31e19f92f00c7003fa115047ce50978bc98c3a0d)
 set(branch stable)
 set(sha512 707ff486677a1b5502d6d8faa588e7a03b0dee45491c5cba89341be4be23d3f2e48272c3b11d54cfc7be1b8bf4a3dfc3c3bb6d9643a6b5a2ed77539c85ecf294)
 
-# Conditionally find and apply patches in numerical order
-if(NOT "no-patches" IN_LIST FEATURES)
-    file(GLOB PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
-    )
-    list(SORT PATCHES)
-endif()
-file(GLOB VCPKG_PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
-)
-list(SORT VCPKG_PATCHES)
-
 # Note on x264 versioning:
 # The pc file exports "0.164.<N>" where is the number of commits.
 # The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.
@@ -25,6 +13,7 @@ string(REGEX MATCH "^......." short_ref "${ref}")
 string(REGEX MATCH "[0-9]+\$" revision "${VERSION}")
 configure_file("${CURRENT_PORT_DIR}/version.diff.in" "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff" @ONLY)
 
+vcpkg_find_patches()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LizardByte-infrastructure/x264
