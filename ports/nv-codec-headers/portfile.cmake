@@ -3,18 +3,7 @@ set(ref 22441b505d9d9afc1e3002290820909846c24bdc)
 set(branch sdk/12.0)
 set(sha512 3fa66cc36a982db24b3f57925dd4cef99ead58f5e01ad2764638d16749b35c41f1ae5ad0cf7c73e4e62ad5391065ba2345e309ebf339b274532560d2c4820153)
 
-# Conditionally find and apply patches in numerical order
-if(NOT "no-patches" IN_LIST FEATURES)
-    file(GLOB PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
-    )
-    list(SORT PATCHES)
-endif()
-file(GLOB VCPKG_PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
-)
-list(SORT VCPKG_PATCHES)
-
+vcpkg_find_patches()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers

@@ -3,18 +3,7 @@ set(ref 3bd3dd731b4b4c3fbbe5e513c16bc6ae481a0ec5)
 set(branch Release_3.5)
 set(sha512 21e0a16c4018af84a242c9c030fe416c544aff2fe06a25759930fe99ff18e0c4bc4e9ba5b19c8a1ade2ac1c5a0651fe633ec59fb8c895ca29c93f57282173c94)
 
-# Conditionally find and apply patches in numerical order
-if(NOT "no-patches" IN_LIST FEATURES)
-    file(GLOB PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/patches/*.patch"
-    )
-    list(SORT PATCHES)
-endif()
-file(GLOB VCPKG_PATCHES
-    "${CMAKE_CURRENT_LIST_DIR}/patches/vcpkg/*.patch"
-)
-list(SORT VCPKG_PATCHES)
-
+vcpkg_find_patches()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LizardByte-infrastructure/x265_git
