@@ -12,7 +12,7 @@ index a407271..f147d37 100755
      list(APPEND PLATFORM_LIBS pthread)
      find_library(LIBRT rt)
      if(LIBRT)
-@@ -705,6 +708,9 @@ if(X265_LATEST_TAG)
+@@ -718,6 +721,9 @@ if(X265_LATEST_TAG)
          list(REMOVE_ITEM PLIBLIST "-lc" "-lpthread" "-lmingwex" "-lmingwthrd"
              "-lmingw32" "-lmoldname" "-lmsvcrt" "-ladvapi32" "-lshell32"
              "-luser32" "-lkernel32")

@@ -48,6 +48,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "vpl"
+          ],
+          "platform": "!(arm & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "x264"
           ],
           "platform": "!(arm & windows)"
@@ -75,6 +83,13 @@
       "supports": "!osx",
       "dependencies": [
         "amf"
+      ]
+    },
+    "vpl": {
+      "description": "Intel Video Processing Library support",
+      "supports": "!(arm & windows)",
+      "dependencies": [
+        "vpl"
       ]
     },
     "no-cbs-patches": {

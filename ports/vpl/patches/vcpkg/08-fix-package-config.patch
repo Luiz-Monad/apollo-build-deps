@@ -1,0 +1,141 @@
+diff --git a/libvpl/cmake/VPLConfig.cmake.in b/libvpl/cmake/VPLConfig.cmake.in
+index 7a60974..4f6f945 100644
+--- a/libvpl/cmake/VPLConfig.cmake.in
++++ b/libvpl/cmake/VPLConfig.cmake.in
+@@ -4,7 +4,7 @@
+ # SPDX-License-Identifier: MIT
+ # ##############################################################################
+ 
+-# * Config file for the VPL package It defines the following variables
++# Config file for the VPL package. It defines the following variables:
+ #   VPL_<component>_FOUND VPL_IMPORTED_TARGETS
+ #
+ # VPLConfigVersion.cmake defines VPL_VERSION
+@@ -14,23 +14,32 @@ option(VPL_SHARED "Use shared instead of static version of dispatcher."
+ 
+ # Initialize to default values
+ set(VPL_INTERFACE_VERSION @API_VERSION_MAJOR@)
+-get_filename_component(_vpl_config_file
+-                       "${CMAKE_CURRENT_LIST_DIR}/VPLConfig.cmake" REALPATH)
+-get_filename_component(_vpl_config_dir "${_vpl_config_file}" DIRECTORY)
+-get_filename_component(_vpl_install_prefix
+-                       "${_vpl_config_dir}/@cmake_rel_prefix@" REALPATH)
+ 
+-get_filename_component(VPL_LIB_DIR "${_vpl_config_dir}/@cmake_rel_libdir@"
+-                       ABSOLUTE)
+-get_filename_component(VPL_INCLUDE_DIR "${_vpl_config_dir}/@cmake_rel_incdir@"
+-                       ABSOLUTE)
+-get_filename_component(VPL_BIN_DIR "${_vpl_config_dir}/@cmake_rel_bindir@"
+-                       ABSOLUTE)
++get_filename_component(_vpl_config_file "${CMAKE_CURRENT_LIST_FILE}" REALPATH)
++get_filename_component(_vpl_config_dir "${_vpl_config_file}/../.." DIRECTORY)
++get_filename_component(_vpl_install_prefix "${_vpl_config_dir}/" REALPATH)
++get_filename_component(_vpl_debug_install_prefix "${_vpl_config_dir}/debug/" REALPATH)
++
++set(VPL_LIB_DIR "${_vpl_install_prefix}/@CMAKE_INSTALL_LIBDIR@")
++set(VPL_INCLUDE_DIR "${_vpl_install_prefix}/@CMAKE_INSTALL_INCLUDEDIR@")
++set(VPL_BIN_DIR "${_vpl_install_prefix}/@CMAKE_INSTALL_BINDIR@")
++
++set(VPL_DEBUG_LIB_DIR "${_vpl_debug_install_prefix}/@CMAKE_INSTALL_LIBDIR@")
++set(VPL_DEBUG_BIN_DIR "${_vpl_debug_install_prefix}/@CMAKE_INSTALL_BINDIR@")
++
++get_filename_component(VPL_LIB_DIR "${VPL_LIB_DIR}" ABSOLUTE)
++get_filename_component(VPL_INCLUDE_DIR "${VPL_INCLUDE_DIR}" ABSOLUTE)
++get_filename_component(VPL_BIN_DIR "${VPL_BIN_DIR}" ABSOLUTE)
++
++get_filename_component(VPL_DEBUG_LIB_DIR "${VPL_DEBUG_LIB_DIR}" ABSOLUTE)
++get_filename_component(VPL_DEBUG_BIN_DIR "${VPL_DEBUG_BIN_DIR}" ABSOLUTE)
+ 
+ if(CMAKE_SYSTEM_NAME MATCHES Windows)
+   set(VPL_SHLIB_DIR ${VPL_BIN_DIR})
++  set(VPL_DEBUG_SHLIB_DIR ${VPL_DEBUG_BIN_DIR})
+ else()
+   set(VPL_SHLIB_DIR ${VPL_LIB_DIR})
++  set(VPL_DEBUG_SHLIB_DIR ${VPL_DEBUG_LIB_DIR})
+ endif()
+ 
+ if(NOT VPL_IMPORTED_TARGETS)
+@@ -47,18 +56,24 @@ endif()
+ # VPL::dispatcher
+ set(VPL_dispatcher_FOUND 0)
+ 
+-get_filename_component(_dispatcher_shlib "${VPL_SHLIB_DIR}/@SHLIB_FILE_NAME@"
++get_filename_component(_dispatcher_shlib
++                       "${VPL_SHLIB_DIR}/@SHLIB_FILE_NAME@"
+                        ABSOLUTE)
+ get_filename_component(_dispatcher_debug_shlib
+-                       "${VPL_SHLIB_DIR}/@SHLIB_FILE_NAME_DEBUG@" ABSOLUTE)
+-get_filename_component(_dispatcher_lib "${VPL_LIB_DIR}/@LIB_FILE_NAME@"
++                       "${VPL_DEBUG_SHLIB_DIR}/@SHLIB_FILE_NAME_DEBUG@"
++                       ABSOLUTE)
++get_filename_component(_dispatcher_lib
++                       "${VPL_LIB_DIR}/@LIB_FILE_NAME@"
+                        ABSOLUTE)
+ get_filename_component(_dispatcher_debug_lib
+-                       "${VPL_LIB_DIR}/@LIB_FILE_NAME_DEBUG@" ABSOLUTE)
+-get_filename_component(_dispatcher_implib "${VPL_LIB_DIR}/@LIB_FILE_NAME@"
++                       "${VPL_DEBUG_LIB_DIR}/@LIB_FILE_NAME_DEBUG@"
++                       ABSOLUTE)
++get_filename_component(_dispatcher_implib
++                       "${VPL_LIB_DIR}/@LIB_FILE_NAME@"
+                        ABSOLUTE)
+ get_filename_component(_dispatcher_debug_implib
+-                       "${VPL_LIB_DIR}/@LIB_FILE_NAME_DEBUG@" ABSOLUTE)
++                       "${VPL_DEBUG_LIB_DIR}/@LIB_FILE_NAME_DEBUG@"
++                       ABSOLUTE)
+ 
+ if(TARGET VPL::dispatcher)
+   list(APPEND VPL_IMPORTED_TARGETS VPL::dispatcher)
+@@ -103,7 +118,7 @@ else()
+                    IMPORTED_LOCATION_DEBUG ${_dispatcher_debug_lib}
+                    IMPORTED_LOCATION_RELWITHDEBRT ${_dispatcher_debug_lib})
+       if(UNIX)
+-        # require pthreads for loading legacy MSDK runtimes
++        # Require pthreads for loading legacy MSDK runtimes
+         set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+         set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+         find_package(Threads REQUIRED)
+@@ -115,8 +130,9 @@ else()
+       set(VPL_FOUND FALSE)
+     endif()
+   endif()
++  # Include both the main include directory and vpl subdirectory
+   set_target_properties(VPL::dispatcher PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+-                                                   "${VPL_INCLUDE_DIR}")
++                        "${VPL_INCLUDE_DIR};${VPL_INCLUDE_DIR}/vpl")
+ endif()
+ 
+ unset(_dispatcher_shlib)
+@@ -127,7 +143,7 @@ if(EXISTS ${VPL_INCLUDE_DIR})
+   if(NOT TARGET VPL::api)
+     add_library(VPL::api INTERFACE IMPORTED)
+     set_target_properties(VPL::api PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+-                                              "${VPL_INCLUDE_DIR}")
++                          "${VPL_INCLUDE_DIR};${VPL_INCLUDE_DIR}/vpl")
+   endif()
+   list(APPEND VPL_IMPORTED_TARGETS VPL::api)
+   set(VPL_api_FOUND 1)
+@@ -139,7 +155,7 @@ if(EXISTS ${VPL_INCLUDE_DIR})
+   if(NOT TARGET VPL::cppapi)
+     add_library(VPL::cppapi INTERFACE IMPORTED)
+     set_target_properties(VPL::cppapi PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+-                                                 "${VPL_INCLUDE_DIR}")
++                          "${VPL_INCLUDE_DIR};${VPL_INCLUDE_DIR}/vpl")
+   endif()
+   list(APPEND VPL_IMPORTED_TARGETS VPL::cppapi)
+   set(VPL_cppapi_FOUND 1)
+diff --git a/libvpl/pkgconfig/vpl.pc.in b/libvpl/pkgconfig/vpl.pc.in
+index aa9b158..a3ddb51 100644
+--- a/libvpl/pkgconfig/vpl.pc.in
++++ b/libvpl/pkgconfig/vpl.pc.in
+@@ -1,6 +1,7 @@
+-prefix=@pc_rel_prefix@
+-libdir=@pc_rel_libdir@
+-includedir=@pc_rel_incdir@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: Intel(R) Video Processing Library
+ Description: Accelerated video decode, encode, and frame processing capabilities on Intel(R) GPUs

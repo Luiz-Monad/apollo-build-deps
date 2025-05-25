@@ -1,0 +1,24 @@
+{
+  "name": "vpl",
+  "version": "2.15.0",
+  "port-version": 100,
+  "description": "Intel Video Processing Library for hardware-accelerated video decode, encode, and processing",
+  "homepage": "https://github.com/intel/libvpl",
+  "license": "MIT",
+  "supports": "!arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tools",
+      "host": true
+    }
+  ],
+  "features": {
+    "no-patches": {
+      "description": "Disable all patches (except vcpkg)"
+    }
+  }
+}

@@ -10,6 +10,7 @@ vcpkg_find_patches(
         mf
         nv-codec-headers
         vaapi
+        vpl
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -18,9 +19,12 @@ vcpkg_from_github(
     SHA512 "${sha512}"
     PATCHES
         ${VCPKG_PATCHES}
+        ${AMF_PATCHES}
         ${CBS_PATCHES}
         ${MF_PATCHES}
+        ${NV_CODEC_HEADERS_PATCHES}
         ${VAAPI_PATCHES}
+        ${VPL_PATCHES}
 )
 
 # ========================================================================================================
@@ -41,20 +45,20 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQU
     vcpkg_add_to_path("${NASM_EXE_PATH}")
 endif()
 
-set(OPTIONS "--disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        string(APPEND OPTIONS " --target-os=mingw32 --enable-libvpl --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
+        string(APPEND OPTIONS " --target-os=mingw32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        string(APPEND OPTIONS " --target-os=mingw64 --enable-libvpl --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
+        string(APPEND OPTIONS " --target-os=mingw64 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     string(APPEND OPTIONS " --target-os=linux --enable-pthreads --enable-v4l2_m2m --enable-vaapi")
 elseif(VCPKG_TARGET_IS_UWP)
-    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-libvpl --enable-d3d11va --enable-d3d12va --enable-mediafoundation")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-libvpl --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
     string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
 elseif(VCPKG_TARGET_IS_IOS)
@@ -214,7 +218,7 @@ endif()
 
 set(OPTIONS "${OPTIONS} --disable-iconv")
 
-if("nvcodec" IN_LIST FEATURES)
+if("nv-codec-headers" IN_LIST FEATURES)
     #Note: the --enable-cuda option does not actually require the cuda sdk or toolset port dependency as ffmpeg uses runtime detection and dynamic loading
     set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec")
     set(OPTIONS "${OPTIONS} --enable-encoder=h264_nvenc,hevc_nvenc,av1_nvenc")
@@ -231,12 +235,20 @@ else()
     set(WITH_NVCODEC OFF)
 endif()
 
-if("SVT-AV1" IN_LIST FEATURES)
+if("svt-av1" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsvtav1")
     set(WITH_SVTAV1 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsvtav1")
     set(WITH_SVTAV1 OFF)
+endif()
+
+if("vpl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libvpl")
+    set(WITH_VPL OFF)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libvpl")
+    set(WITH_VPL ON)
 endif()
 
 if("x264" IN_LIST FEATURES)
@@ -358,10 +370,14 @@ if (VCPKG_TARGET_IS_IOS)
     set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${vcpkg_osx_sysroot}\"")
 endif ()
 
-set(OPTIONS_DEBUG "--disable-optimizations")
-set(OPTIONS_RELEASE "--enable-optimizations")
+set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
+set(OPTIONS_RELEASE "--enable-optimizations --disable-debug")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
+endif()
 
 if(VCPKG_TARGET_IS_MINGW)
     set(OPTIONS "${OPTIONS} --extra_cflags=-D_WIN32_WINNT=0x0601")
@@ -369,7 +385,11 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 endif()
 
-set(maybe_needed_libraries -lm)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(maybe_needed_libraries ole32.lib advapi32.lib)
+else()
+    set(maybe_needed_libraries -lm)
+endif()
 separate_arguments(standard_libraries NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
 foreach(item IN LISTS standard_libraries)
     if(item IN_LIST maybe_needed_libraries)
@@ -379,7 +399,9 @@ endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 set(OPTIONS "${OPTIONS} --pkg-config=\"${PKGCONFIG}\"")
-set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
+endif()
 
 message(STATUS "Building Options: ${OPTIONS}")
 
@@ -519,7 +541,10 @@ endif()
 # ========================================================================================================
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_copy_pdbs()
 
@@ -675,7 +700,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAG
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "
 To use the static libraries to build your own shared library,
 you may need to add the following link option for your library:

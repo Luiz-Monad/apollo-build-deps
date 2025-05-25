@@ -1,0 +1,13 @@
+diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
+index 0419980..47f6c08 100644
+--- a/libvpl/CMakeLists.txt
++++ b/libvpl/CMakeLists.txt
+@@ -169,7 +169,7 @@ if(INSTALL_DEV)
+   install(
+     FILES "${CMAKE_CURRENT_BINARY_DIR}/cmake/VPLConfig.cmake"
+           "${CMAKE_CURRENT_BINARY_DIR}/cmake/VPLConfigVersion.cmake"
+-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/vpl"
++    DESTINATION "share/vpl"
+     COMPONENT ${VPL_COMPONENT_DEV})
+ 
+   file(RELATIVE_PATH pc_rel_prefix ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig

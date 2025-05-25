@@ -1,0 +1,2 @@
+# force lf endings for patches to match the source
+*.patch eol=lf

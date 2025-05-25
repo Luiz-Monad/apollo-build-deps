@@ -25,10 +25,6 @@ vcpkg_from_github(
         ${PATCHES}
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "This library does not support dynamic linking")
-endif()
-
 function(add_cross_prefix)
   if(configure_env MATCHES "CC=([^\/]*-)gcc$")
       vcpkg_list(APPEND arg_OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
@@ -81,6 +77,7 @@ vcpkg_make_configure(
         add_cross_prefix
     OPTIONS
         ${OPTIONS}
+        --enable-pic
         --enable-static
         --disable-bashcompletion
         --disable-cli

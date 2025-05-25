@@ -1,0 +1,29 @@
+diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
+index 47f6c08..30e4b11 100644
+--- a/libvpl/CMakeLists.txt
++++ b/libvpl/CMakeLists.txt
+@@ -6,7 +6,6 @@
+ cmake_minimum_required(VERSION 3.13.0)
+ set(TARGET VPL)
+ set(OUTPUT_NAME "vpl")
+-set(DLL_PREFIX "lib")
+ 
+ if(WIN32)
+   set(SOURCES
+@@ -71,13 +70,10 @@ if(UNIX)
+ endif()
+ 
+ if(WIN32)
+-  # force libxxx style sharedlib name on Windows
+-  if(BUILD_SHARED_LIBS)
+-    set_target_properties(${TARGET} PROPERTIES PREFIX ${DLL_PREFIX})
+-  endif()
+-  set(SHLIB_FILE_NAME ${DLL_PREFIX}${OUTPUT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
++  set(OUTPUT_NAME lib${OUTPUT_NAME})
++  set(SHLIB_FILE_NAME ${OUTPUT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+   set(SHLIB_FILE_NAME_DEBUG
+-      ${DLL_PREFIX}${OUTPUT_NAME}${CMAKE_DEBUG_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}
++      ${OUTPUT_NAME}${CMAKE_DEBUG_POSTFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}
+   )
+ 
+ else()

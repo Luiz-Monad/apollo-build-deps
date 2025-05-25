@@ -1,0 +1,24 @@
+diff --git a/cmake/InstallDirs.cmake b/cmake/InstallDirs.cmake
+index 8af22c7..c589c86 100644
+--- a/cmake/InstallDirs.cmake
++++ b/cmake/InstallDirs.cmake
+@@ -8,9 +8,7 @@
+ # Set installation directories
+ #
+ 
+-if(WIN32
+-   AND NOT CMAKE_CROSSCOMPILING
+-   AND CMAKE_SIZEOF_VOID_P EQUAL 4)
++if(0)
+   if(NOT CMAKE_INSTALL_BINDIR)
+     set(BINARCH x86)
+   endif()
+@@ -29,7 +27,7 @@ set(CMAKE_INSTALL_DOCDIR ${CMAKE_INSTALL_DATAROOTDIR}/doc/${PROJECT_NAME})
+ gnuinstalldirs_get_absolute_install_dir(CMAKE_INSTALL_FULL_DOCDIR
+                                         CMAKE_INSTALL_DOCDIR DOCDIR)
+ 
+-if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
++if(0)
+   set(CMAKE_INSTALL_BINDIR
+       ${CMAKE_INSTALL_BINDIR}/${BINARCH}
+       CACHE PATH "user executables" FORCE)

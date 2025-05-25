@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b651306f..fc41d490 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,12 +80,6 @@ include(GNUInstallDirs)
+ include(CheckCCompilerFlag)
+ include(CheckCXXCompilerFlag)
+ 
+-set(CMAKE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin/${CMAKE_BUILD_TYPE}/" CACHE PATH "Location to write the resulting binaries to")
+-
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+-
+ #Clang support, required to build static with LTO
+ if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND UNIX AND NOT APPLE)
+     find_program(LLVM_LD_EXE llvm-ld)

@@ -1,0 +1,13 @@
+diff --git a/cmake/CompileOptions.cmake b/cmake/CompileOptions.cmake
+index 02926c4..1e789b8 100644
+--- a/cmake/CompileOptions.cmake
++++ b/cmake/CompileOptions.cmake
+@@ -69,8 +69,6 @@ endif()
+ 
+ # Define RelWithDebRT Build Mode
+ if(MSVC)
+-  set(CMAKE_DEBUG_POSTFIX "d")
+-  set(CMAKE_RELWITHDEBRT_POSTFIX "d")
+   set(CMAKE_CXX_FLAGS_RELWITHDEBRT
+       "${CMAKE_CXX_FLAGS_RELEASE}"
+       CACHE STRING "Flags used by the C++ compiler during RelWithDebRT builds."

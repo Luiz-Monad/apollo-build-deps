@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5e31ff6..26df78c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,6 +99,7 @@ if(0)
+   add_subdirectory(env)
+ endif()
+ 
++if(0)
+ install(
+   FILES third-party-programs.txt
+   DESTINATION ${VPL_INSTALL_LICENSEDIR}
+@@ -109,6 +110,7 @@ install(
+   RENAME license.txt
+   DESTINATION ${VPL_INSTALL_LICENSEDIR}
+   COMPONENT ${VPL_COMPONENT_LIB})
++endif()
+ 
+ if(INSTALL_LIB)
+   set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT ${VPL_COMPONENT_LIB})

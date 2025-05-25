@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc41d490..fe69affd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,22 +80,6 @@ include(GNUInstallDirs)
+ include(CheckCCompilerFlag)
+ include(CheckCXXCompilerFlag)
+ 
+-#Clang support, required to build static with LTO
+-if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND UNIX AND NOT APPLE)
+-    find_program(LLVM_LD_EXE llvm-ld)
+-    find_program(LLVM_AR_EXE llvm-ar)
+-    find_program(LLVM_RANLIB_EXE llvm-ranlib)
+-    if(LLVM_LD_EXE)
+-        SET (CMAKE_LINKER  "llvm-ld")
+-    endif()
+-    if(LLVM_AR_EXE)
+-        SET (CMAKE_AR      "llvm-ar")
+-    endif()
+-    if(LLVM_RANLIB_EXE)
+-        SET (CMAKE_RANLIB  "llvm-ranlib")
+-    endif()
+-endif()
+-
+ if(MSVC)
+     if(DEFINED SANITIZER)
+         message(WARNING "Sanitizers are not available with MSVC currently")

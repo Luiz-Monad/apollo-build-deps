@@ -14,10 +14,6 @@ vcpkg_from_github(
         ${PATCHES}
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "This library does not support dynamic linking")
-endif()
-
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_find_acquire_program(NASM)
     list(APPEND OPTIONS "-DNASM_EXECUTABLE=${NASM}")
@@ -31,6 +27,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DENABLE_ASSEMBLY=OFF")
 endif()
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
+
 # not currently supported for aarch64
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     list(APPEND OPTIONS "-DENABLE_HDR10_PLUS=ON")
@@ -40,8 +38,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
     OPTIONS
         ${OPTIONS}
-        -DSTATIC_LINK_CRT=ON
-        -DENABLE_SHARED=OFF
+        -DENABLE_SHARED=${ENABLE_SHARED}
+        -DENABLE_PIC=ON
         -DENABLE_LIBNUMA=OFF
         -DENABLE_CLI=OFF
         "-DVERSION=${VERSION}"
@@ -52,6 +50,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x265.h" "#ifdef X265_API_IMPORTS" "#if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

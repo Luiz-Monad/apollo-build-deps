@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34504bc..fb5073d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,11 +76,6 @@ if(USE_MSVC_STATIC_RUNTIME)
+   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ endif()
+ 
+-# Set output directories
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+-
+ include(cmake/InstallDirs.cmake)
+ include(cmake/PackageTarget.cmake)
+ 

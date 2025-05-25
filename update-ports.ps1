@@ -64,9 +64,7 @@ function Get-GitSubmodules {
         }
 
         # Clean up name
-        $name = (Split-Path $name -Leaf)
-        $name = if ($name -match '([^/]+)_git$') { $matches[1].Trim() } else { $name }
-        $name = $name.ToLower()
+        $name = (Split-Path $name -Leaf).ToLower()
 
         # Extract path, url, and branch
         $path = if ($config -match 'path\s*=\s*(.+)') { $matches[1].Trim() } else { $null }
