@@ -6,10 +6,10 @@
 	path = third-party/FFmpeg/x264
 	url = https://github.com/LizardByte-infrastructure/x264.git
 	branch = stable
-[submodule "third-party/FFmpeg/x265_git"]
-	path = third-party/FFmpeg/x265_git
+[submodule "third-party/FFmpeg/x265"]
+	path = third-party/FFmpeg/x265
 	url = https://github.com/LizardByte-infrastructure/x265_git.git
-	branch = stable
+	branch = Release_3.5
 [submodule "third-party/FFmpeg/nv-codec-headers"]
 	path = third-party/FFmpeg/nv-codec-headers
 	url = https://github.com/FFmpeg/nv-codec-headers.git
